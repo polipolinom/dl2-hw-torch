@@ -21,6 +21,12 @@ class Graph:
 
 
 def simple(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        linearly separable dataset (more precisely the separating line is x = 0.5)
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -30,6 +36,12 @@ def simple(N: int) -> Graph:
 
 
 def diag(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        linearly separable dataset (more precisely the separating line is x + y = 0.5)
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -39,6 +51,13 @@ def diag(N: int) -> Graph:
 
 
 def split(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        a dataset which spliitted by lines (x = 0.2 and x = 0.8) into three parts,
+          where edge parts have the same class
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -48,6 +67,13 @@ def split(N: int) -> Graph:
 
 
 def xor(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        a dataset which spliitted by lines (x = 0.5 and y = 0.5) into four parts,
+          where the parts symmetric with respect to (0.5, 0.5) have the same class
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -57,6 +83,13 @@ def xor(N: int) -> Graph:
 
 
 def circle(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        a dataset in which one class forms a circle, 
+        the other class is completely located around the first one
+    """ 
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -67,6 +100,12 @@ def circle(N: int) -> Graph:
 
 
 def spiral(N: int) -> Graph:
+    """
+    Input:
+        N: number of points in dataset
+    Output:
+        a dataset in which objects of both classes are arranged on spirals
+    """ 
     def x(t: float) -> float:
         return t * math.cos(t) / 20.0
 
