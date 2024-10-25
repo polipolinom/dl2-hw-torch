@@ -220,7 +220,7 @@ class Tensor:
             return self.sum(dim) / self.shape[dim]
         else:
             return self.sum() / self.size
-        
+
     def to_list(self, type=float) -> list:
         "Create a list from tensor"
         return [type(item) for item in self._tensor._storage]

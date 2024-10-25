@@ -211,14 +211,14 @@ class Permute(Function):
     @staticmethod
     def forward(ctx: Context, a: Tensor, order: Tensor) -> Tensor:
         ctx.save_for_backward(order)
-        return minitorch.Tensor(v = a._tensor.permute(*order.to_list(int)),
-                                backend = a.backend)
+        return minitorch.Tensor(v=a._tensor.permute(*order.to_list(int)),
+                                backend=a.backend)
 
     @staticmethod
     def backward(ctx: Context, grad_output: Tensor) -> Tuple[Tensor, float]:
         (order, ) = ctx.saved_values
-        return minitorch.Tensor(v = grad_output._tensor.permute_back(*order.to_list(int)),
-                                backend = grad_output.backend), 0.0
+        return minitorch.Tensor(v=grad_output._tensor.permute_back(*order.to_list(int)),
+                                backend=grad_output.backend), 0.0
 
 
 class View(Function):

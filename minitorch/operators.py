@@ -34,6 +34,7 @@ def lt(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is less than y else 0.0"
     return float(x < y)
 
+
 def eq(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is equal to y else 0.0"
     return float(x == y)
@@ -63,9 +64,9 @@ def sigmoid(x: float) -> float:
     """
     return 1. / (1. + math.exp(-x)) if x >= 0 else math.exp(x) / (1. + math.exp(x))
 
+
 def sigmoid_back(x: float, d: float) -> float:
     return d * sigmoid(x) * (1. - sigmoid(x))
-
 
 
 def relu(x: float) -> float:
