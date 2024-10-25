@@ -1,7 +1,10 @@
+from pathlib import Path
 import random
 
-import chalk as ch
-from chalk import (
+from streamlit import text
+
+import chalk as ch # type: ignore
+from chalk import ( # type: ignore
     Trail,
     empty,
     make_path,
@@ -11,8 +14,8 @@ from chalk import (
     unit_x,
     unit_y,
 )
-from colour import Color
-from drawing import aqua, black, lightblue, lightred
+from colour import Color # type: ignore
+from drawing import aqua, black, lightblue, lightred # type: ignore
 
 import minitorch
 
@@ -150,7 +153,7 @@ def quad(fn, c1, c2):
                 q(tl + s * unit_y, s) | q(tl + s * (unit_y + unit_x), s)
             )
 
-    return q(P2(0, 0), 1)
+    return q(P2(0, 0), 1) # type: ignore
 
 
 def draw_graph(f, c1=lightred, c2=lightblue):
@@ -160,9 +163,9 @@ def draw_graph(f, c1=lightred, c2=lightblue):
 def compare(m1, m2):
     return (
         draw_graph(m1).center_xy()
-        | hstrut(0.5)
+        | hstrut(0.5) # type: ignore
         | text("→", 0.5).fill_color(black)
-        | hstrut(0.5)
+        | hstrut(0.5) # type: ignore
         | draw_graph(m2).center_xy()
     )
 
@@ -170,12 +173,12 @@ def compare(m1, m2):
 def with_points(pts1, pts2, b):
     "Draw a picture showing line to boundary"
     w1, w2 = 1, 1
-    model = Linear(w1, w2, b)
+    model = Linear(w1, w2, b) # type: ignore
     line = make_path([(0, b), (1, b + 1)])
     dia = draw_graph(model) + split_graph(pts1, pts2, False)
 
     for pt in pts1:
-        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1))
+        pt2 = line.get_trace().trace_p(P2(pt[0], -pt[1]), V2(-1, 1)) # type: ignore
         if pt2:
             dia += make_path([(pt[0], -pt[1]), pt2]).dashing([5, 5], 0)
     return dia
@@ -209,22 +212,22 @@ def show_loss(full_loss):
     i = 0
     for j, b in enumerate(range(20)):
         b = -1.7 + b / 20
-        m = Linear(1, 1, b)
+        m = Linear(1, 1, b) # type: ignore
         pt = (b, full_loss(m))
         path.append(pt)
         if j % 5 == 0:
-            d = d | hstrut(0.5) | show(m).named(("graph", i))
-            p = circle(0.01).translate(pt[0], pt[1]).fill_color(black)
+            d = d | hstrut(0.5) | show(m).named(("graph", i)) # type: ignore
+            p = circle(0.01).translate(pt[0], pt[1]).fill_color(black) # type: ignore
             p = p.named(("x", i))
             i += 1
             scores.append(p)
     d = (
-        (concat(scores) + make_path(path)).center_xy().scale(3)
-        / vstrut(0.5)
+        (concat(scores) + make_path(path)).center_xy().scale(3) # type: ignore
+        / vstrut(0.5) # type: ignore
         / d.scale(2).center_xy()
     )
     for i in range(i):
-        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1))
+        d = d.connect(("graph", i), ("x", i), ArrowOpts(head_pad=0.1)) # type: ignore
     return d
 
 
