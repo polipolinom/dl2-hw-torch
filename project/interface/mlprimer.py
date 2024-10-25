@@ -48,7 +48,7 @@ def circle_mark():
 
 
 def origin():
-    return ch.rectangle(1, 1).translate(0.5, -0.5).fill_color(white).line_color(white)
+    return ch.rectangle(1, 1).translate(0.5, -0.5).fill_color(Color("white")).line_color(Color("white"))
 
 
 def axes():
@@ -78,7 +78,7 @@ def d_mark():
         True,
     )
     return (
-        t.rotate_by(0.25 / 2).line_width(0.2).scale_uniform_to_x(0.1).fill_color(blue)
+        t.rotate_by(0.25 / 2).line_width(0.2).scale_uniform_to_x(0.1).fill_color(Color("blue"))
     )
 
 

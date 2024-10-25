@@ -190,7 +190,7 @@ class LT(ScalarFunction):
     @staticmethod
     def backward(ctx: Context, d_output: float) -> Tuple[float, float]:
         return 0., 0.
-    
+
 
 class GT(ScalarFunction):
     "Greater-than function $f(x) =$ 1.0 if x is greater than y else 0.0"

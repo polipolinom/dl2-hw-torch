@@ -112,7 +112,7 @@ def test_sigmoid(a: float) -> None:
     assert sigmoid(a) >= 0. and sigmoid(a) <= 1.
     assert_close(1. - sigmoid(a), sigmoid(-a))
     assert_close(sigmoid(0.), 0.5)
-    assert sigmoid(a - 1e-3) <= sigmoid(a) <= sigmoid(a + 1e-3) #inaccuracy of calculations change small diff to zero
+    assert sigmoid(a - 1e-3) <= sigmoid(a) <= sigmoid(a + 1e-3)  # inaccuracy of calculations change small diff to zero
     assert sigmoid(-1e-1) < sigmoid(-1e-2) < sigmoid(-1e-3) < sigmoid(0) < sigmoid(1e-3) < sigmoid(1e-2) < sigmoid(1e-1)
 
 
@@ -132,7 +132,7 @@ def test_transitive(a: float, b: float, c: float) -> None:
         assert lt(c, b) == 1.
     if lt(c, b) and lt(b, a):
         assert lt(c, a) == 1.
-    
+
 
 @pytest.mark.task0_2
 @given(small_floats, small_floats)

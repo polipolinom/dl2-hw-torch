@@ -62,7 +62,7 @@ def sigmoid(x: float) -> float:
 
     for stability.
     """
-    return 1./(1. + math.exp(-x)) if x >= 0 else math.exp(x) / (1. + math.exp(x))
+    return 1. / (1. + math.exp(-x)) if x >= 0 else math.exp(x) / (1. + math.exp(x))
 
 
 def relu(x: float) -> float:
@@ -155,7 +155,7 @@ def zipWith(
 
     """
     def process(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
-        assert len(ls1) == len(ls2) 
+        assert len(ls1) == len(ls2)
         return [fn(ls1[i], ls2[i]) for i in range(len(ls1))]
     return process
 

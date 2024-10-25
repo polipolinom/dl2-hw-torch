@@ -81,7 +81,6 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     return top_sort[::-1]
 
 
-
 def backpropagate(variable: Variable, deriv: Any) -> None:
     """
     Runs backpropagation on the computation graph in order to

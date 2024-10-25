@@ -9,7 +9,7 @@ from .autodiff import Context, Variable, backpropagate, central_difference
 from .scalar_functions import (
     EQ,
     LT,
-    GT, 
+    GT,
     Add,
     Exp,
     Inv,
@@ -166,7 +166,6 @@ class Scalar:
 
         derivatives = h.last_fn._backward(h.ctx, d_output)
         return [(h.inputs[i], derivatives[i]) for i in range(len(derivatives))]
-
 
     def backward(self, d_output: Optional[float] = None) -> None:
         """

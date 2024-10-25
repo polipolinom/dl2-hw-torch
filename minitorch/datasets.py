@@ -87,9 +87,9 @@ def circle(N: int) -> Graph:
     Input:
         N: number of points in dataset
     Output:
-        a dataset in which one class forms a circle, 
+        a dataset in which one class forms a circle,
         the other class is completely located around the first one
-    """ 
+    """
     X = make_pts(N)
     y = []
     for x_1, x_2 in X:
@@ -105,7 +105,7 @@ def spiral(N: int) -> Graph:
         N: number of points in dataset
     Output:
         a dataset in which objects of both classes are arranged on spirals
-    """ 
+    """
     def x(t: float) -> float:
         return t * math.cos(t) / 20.0
 
