@@ -136,7 +136,7 @@ class Tensor:
 
     def _ensure_tensor(self, b: TensorLike) -> Tensor:
         "Turns a python number into a tensor with the same backend."
-        if isinstance(b, (int, float)):
+        if isinstance(b, (int, float, np.int32, np.int64, np.float32, np.float64)):
             c = Tensor.make([b], (1,), backend=self.backend)
         else:
             b._type_(self.backend)
@@ -220,6 +220,10 @@ class Tensor:
             return self.sum(dim) / self.shape[dim]
         else:
             return self.sum() / self.size
+        
+    def to_list(self, type=float) -> list:
+        "Create a list from tensor"
+        return [type(item) for item in self._tensor._storage]
 
     def permute(self, *order: int) -> Tensor:
         "Permute tensor dimensions to *order"

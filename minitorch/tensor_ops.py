@@ -81,9 +81,11 @@ class TensorBackend:
         self.lt_zip = ops.zip(operators.lt)
         self.eq_zip = ops.zip(operators.eq)
         self.is_close_zip = ops.zip(operators.is_close)
+        self.sigmoid_back_zip = ops.zip(operators.sigmoid_back)
         self.relu_back_zip = ops.zip(operators.relu_back)
         self.log_back_zip = ops.zip(operators.log_back)
         self.inv_back_zip = ops.zip(operators.inv_back)
+        self.exp_back_zip = ops.zip(operators.exp_back)
 
         # Reduce
         self.add_reduce = ops.reduce(operators.add, 0.0)
@@ -264,8 +266,12 @@ def tensor_map(
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        out_index = [0] * len(out_shape)
+        in_index = [0] * len(in_shape)
+        for i in range(len(out)):
+            to_index(i, out_shape, out_index)
+            broadcast_index(out_index, out_shape, in_shape, in_index)
+            out[index_to_position(out_index, out_strides)] = fn(in_storage[index_to_position(in_index, in_strides)])
 
     return _map
 
@@ -309,8 +315,15 @@ def tensor_zip(
         b_shape: Shape,
         b_strides: Strides,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        out_index = [0] * len(out_shape)
+        a_index = [0] * len(a_shape)
+        b_index = [0] * len(b_shape)
+        for i in range(len(out)):
+            to_index(i, out_shape, out_index)
+            broadcast_index(out_index, out_shape, a_shape, a_index)
+            broadcast_index(out_index, out_shape, b_shape, b_index)
+            out[index_to_position(out_index, out_strides)] = fn(a_storage[index_to_position(a_index, a_strides)], 
+                                                                b_storage[index_to_position(b_index, b_strides)])
 
     return _zip
 
@@ -340,8 +353,15 @@ def tensor_reduce(
         a_strides: Strides,
         reduce_dim: int,
     ) -> None:
-        # TODO: Implement for Task 2.3.
-        raise NotImplementedError('Need to implement for Task 2.3')
+        out_index = [0] * len(out_shape)
+        a_index = [0] * len(a_shape)
+        for i in range(len(out)):
+            to_index(i, out_shape, out_index)
+            for j in range(a_shape[reduce_dim]):
+                out_index[reduce_dim] = j
+                broadcast_index(out_index, out_shape, a_shape, a_index)
+                out_index[reduce_dim] = 0
+                out[index_to_position(out_index, out_strides)] = fn(out[index_to_position(out_index, out_strides)], a_storage[index_to_position(a_index, a_strides)])
 
     return _reduce
 

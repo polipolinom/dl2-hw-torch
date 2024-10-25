@@ -34,7 +34,6 @@ def lt(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is less than y else 0.0"
     return float(x < y)
 
-
 def eq(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is equal to y else 0.0"
     return float(x == y)
@@ -64,6 +63,10 @@ def sigmoid(x: float) -> float:
     """
     return 1. / (1. + math.exp(-x)) if x >= 0 else math.exp(x) / (1. + math.exp(x))
 
+def sigmoid_back(x: float, d: float) -> float:
+    return d * sigmoid(x) * (1. - sigmoid(x))
+
+
 
 def relu(x: float) -> float:
     """
@@ -85,6 +88,11 @@ def log(x: float) -> float:
 def exp(x: float) -> float:
     "$f(x) = e^{x}$"
     return math.exp(x)
+
+
+def exp_back(x: float, d: float) -> float:
+    "$f(x) = e^{x}$"
+    return d * math.exp(x)
 
 
 def log_back(x: float, d: float) -> float:
@@ -128,9 +136,9 @@ def map(fn: Callable[[float], float]) -> Callable[[Iterable[float]], Iterable[fl
          A function that takes a list, applies `fn` to each element, and returns a
          new list
     """
-    def process(ls: Iterable[float]) -> Iterable[float]:
+    def _map(ls: Iterable[float]) -> Iterable[float]:
         return [fn(element) for element in ls]
-    return process
+    return _map
 
 
 def negList(ls: Iterable[float]) -> Iterable[float]:
@@ -154,10 +162,10 @@ def zipWith(
          applying fn(x, y) on each pair of elements.
 
     """
-    def process(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
+    def _zipWith(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
         assert len(ls1) == len(ls2)
         return [fn(ls1[i], ls2[i]) for i in range(len(ls1))]
-    return process
+    return _zipWith
 
 
 def addLists(ls1: Iterable[float], ls2: Iterable[float]) -> Iterable[float]:
@@ -180,12 +188,12 @@ def reduce(
          $x_1 \ldots x_n$ and computes the reduction :math:`fn(x_3, fn(x_2,
          fn(x_1, x_0)))`
     """
-    def process(ls: Iterable[float]) -> float:
+    def _reduce(ls: Iterable[float]) -> float:
         ans = start
         for element in ls:
             ans = fn(ans, element)
         return ans
-    return process
+    return _reduce
 
 
 def sum(ls: Iterable[float]) -> float:
