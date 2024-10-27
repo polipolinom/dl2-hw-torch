@@ -32,12 +32,12 @@ def neg(x: float) -> float:
 
 def lt(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is less than y else 0.0"
-    return float(x < y)
+    return 1.0 if x < y else 0.0
 
 
 def eq(x: float, y: float) -> float:
     "$f(x) =$ 1.0 if x is equal to y else 0.0"
-    return float(x == y)
+    return 1.0 if x == y else 0.0
 
 
 def max(x: float, y: float) -> float:
@@ -47,7 +47,7 @@ def max(x: float, y: float) -> float:
 
 def is_close(x: float, y: float) -> float:
     "$f(x) = |x - y| < 1e-2$"
-    return float(abs(x - y) < 1e-2)
+    return 1.0 if abs(x - y) < 1e-2 else 0.0
 
 
 def sigmoid(x: float) -> float:
@@ -66,7 +66,8 @@ def sigmoid(x: float) -> float:
 
 
 def sigmoid_back(x: float, d: float) -> float:
-    return d * sigmoid(x) * (1. - sigmoid(x))
+    s = 1. / (1. + math.exp(-x)) if x >= 0 else math.exp(x) / (1. + math.exp(x))
+    return d * s * (1. - s)
 
 
 def relu(x: float) -> float:
@@ -75,7 +76,7 @@ def relu(x: float) -> float:
 
     (See https://en.wikipedia.org/wiki/Rectifier_(neural_networks) .)
     """
-    return max(x, 0.)
+    return x if x > 0. else 0.
 
 
 EPS = 1e-6
