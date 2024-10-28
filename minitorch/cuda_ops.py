@@ -308,7 +308,7 @@ def tensor_reduce(
         to_index(out_pos, out_shape, out_index)
         out_index[reduce_dim] = pos
         cache[pos] = fn(a_storage[index_to_position(out_index, a_strides)], reduce_value) \
-                   if pos < a_shape[reduce_dim] else reduce_value
+            if pos < a_shape[reduce_dim] else reduce_value
         cuda.syncthreads()
 
         s = 1
