@@ -1,6 +1,7 @@
 from typing import Callable, Optional
 
 import numba
+import math
 from numba import cuda
 
 from .tensor import Tensor
@@ -314,7 +315,7 @@ def tensor_reduce(
         s = 1
         while s < cuda.blockDim.x:
             if pos % (2 * s) == 0:
-                cache[pos] += cache[pos + s]
+                cache[pos] = fn(cache[pos], cache[pos + s])
             s *= 2
             cuda.syncthreads()
 
@@ -355,8 +356,30 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
         size (int): size of the square
     """
     BLOCK_DIM = 32
-    # TODO: Implement for Task 3.3.
-    raise NotImplementedError('Need to implement for Task 3.3')
+     
+    # create shared memory arrays
+    a_cache = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
+    b_cache = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
+
+    # fill caches
+    pos_x = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
+    pos_y = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
+
+    if pos_x >= size or pos_y >= size:
+        return # if we are not in matrix, do nothing
+
+    pos = pos_x * size + pos_y # position in storage
+    a_cache[pos_x, pos_y] = a[pos]
+    b_cache[pos_x, pos_y] = b[pos]
+    cuda.syncthreads() #fill caches completely
+
+    # calculate one value of result matrix
+    value = 0.0
+    for i in range(size):
+        value += a_cache[pos_x, i] * b_cache[i, pos_y]
+    # write this value
+    out[pos] = value
+
 
 
 jit_mm_practice = cuda.jit()(_mm_practice)
@@ -425,8 +448,37 @@ def _tensor_matrix_multiply(
     #    a) Copy into shared memory for a matrix.
     #    b) Copy into shared memory for b matrix
     #    c) Compute the dot produce for position c[i, j]
-    # TODO: Implement for Task 3.4.
-    raise NotImplementedError('Need to implement for Task 3.4')
+    
+    assert a_shape[-1] == b_shape[-2]
+    common_dim_size = a_shape[-1] # common dimension size for matmul
+
+    # result of matmul in c[i, j]
+    value = 0.0
+
+    # divide commin dim by blocks
+    for start_block in range(0, common_dim_size, BLOCK_DIM):
+        # calculate ind in common dimension
+        a_common_ind = start_block + pj
+        b_common_ind = start_block + pi
+
+        # calculate positions in storages
+        a_pos = batch * a_batch_stride + i * a_strides[-2] + a_common_ind * a_strides[-1]
+        b_pos = batch * b_batch_stride + b_common_ind * b_strides[-2] + j * b_strides[-1]
+
+        # fill caches
+        a_shared[pi, pj] = a_storage[a_pos] if i < a_shape[-2] and a_common_ind < a_shape[-1] else 0.0
+        b_shared[pi, pj] = b_storage[b_pos] if j < b_shape[-1] and b_common_ind < b_shape[-2] else 0.0
+        cuda.syncthreads() #fill caches completely
+
+        # calculate one value of result matrix
+        for ind in range(BLOCK_DIM):
+            value += a_shared[pi, ind] * b_shared[ind, pj]
+        cuda.syncthreads() # calculate value completele
+    
+    # write value to out storage
+    if i < out_shape[-2] and j < out_shape[-1]:
+        pos = batch * out_strides[-3] +  i * out_strides[-2] + j * out_strides[-1]
+        out[pos] = value
 
 
 tensor_matrix_multiply = cuda.jit(_tensor_matrix_multiply)
