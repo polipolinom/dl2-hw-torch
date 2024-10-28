@@ -165,7 +165,7 @@ def tensor_map(
             for i in prange(len(out)):
                 out[i] = fn(in_storage[i])
             return
-    
+
         for i in prange(len(out)):
             out_index = np.zeros(len(out_shape), dtype=np.int32)
             in_index = np.zeros(len(in_shape), dtype=np.int32)
@@ -213,11 +213,11 @@ def tensor_zip(
            len(a_strides) == len(b_strides) == len(out_strides) and \
            np.all(a_shape == out_shape) and np.all(a_strides == out_strides) and \
            np.all(b_shape == out_shape) and np.all(b_strides == out_strides):
-            
+
             for i in prange(len(out)):
                 out[i] = fn(a_storage[i], b_storage[i])
             return
-    
+
         for i in prange(len(out)):
             out_index = np.zeros(len(out_shape), dtype=np.int32)
             a_index = np.zeros(len(a_shape), dtype=np.int32)
@@ -326,7 +326,7 @@ def _tensor_matrix_multiply(
                 val = 0.0
                 for k in range(a_shape[-1]):
                     val += a_storage[a_batch_stride * n + a_strides[-2] * i + a_strides[-1] * k] * \
-                           b_storage[b_batch_stride * n + b_strides[-2] * k + b_strides[-1] * j]
+                        b_storage[b_batch_stride * n + b_strides[-2] * k + b_strides[-1] * j]
                 out[n * out_strides[-3] + i * out_strides[-2] + j * out_strides[-1]] = val
 
 

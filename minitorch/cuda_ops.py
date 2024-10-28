@@ -151,7 +151,7 @@ def tensor_map(
         out_index = cuda.local.array(MAX_DIMS, numba.int32)
         in_index = cuda.local.array(MAX_DIMS, numba.int32)
         i = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
-        
+
         if i >= out_size:
             return
 
@@ -236,7 +236,7 @@ def _sum_practice(out: Storage, a: Storage, size: int) -> None:
     i = cuda.blockIdx.x * cuda.blockDim.x + cuda.threadIdx.x
     pos = cuda.threadIdx.x
 
-    # inspired by the numba cuda example: 
+    # inspired by the numba cuda example:
     # https://github.com/numba/numba/blob/main/numba/cuda/tests/doc_examples/test_reduction.py
 
     cache[pos] = a[i] if i < size else 0.0
@@ -251,9 +251,10 @@ def _sum_practice(out: Storage, a: Storage, size: int) -> None:
             cache[pos] += cache[pos + s]
             cuda.syncthreads()
         s *= 2
-    
+
     if pos == 0:
         out[cuda.blockIdx.x] = cache[pos]
+
 
 jit_sum_practice = cuda.jit()(_sum_practice)
 

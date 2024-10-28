@@ -383,7 +383,7 @@ def grad_central_difference(
     f2 = f(*vals2)._tensor._storage
     for i in range(len(f1)):
         delta += f1[i] - f2[i]
-    
+
     return delta / (2.0 * epsilon)
 
 
