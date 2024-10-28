@@ -378,9 +378,13 @@ def grad_central_difference(
     up[ind] = epsilon
     vals1 = [x if j != arg else x + up for j, x in enumerate(vals)]
     vals2 = [x if j != arg else x - up for j, x in enumerate(vals)]
-    delta: Tensor = f(*vals1).sum() - f(*vals2).sum()
-
-    return delta[0] / (2.0 * epsilon)
+    delta = 0.0
+    f1 = f(*vals1)._tensor._storage
+    f2 = f(*vals2)._tensor._storage
+    for i in range(len(f1)):
+        delta += f1[i] - f2[i]
+    
+    return delta / (2.0 * epsilon)
 
 
 def grad_check(f: Any, *vals: Tensor) -> None:
