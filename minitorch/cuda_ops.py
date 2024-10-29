@@ -356,7 +356,7 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
         size (int): size of the square
     """
     BLOCK_DIM = 32
-     
+
     # create shared memory arrays
     a_cache = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
     b_cache = cuda.shared.array((BLOCK_DIM, BLOCK_DIM), numba.float64)
@@ -366,12 +366,12 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
     pos_y = cuda.blockIdx.y * cuda.blockDim.y + cuda.threadIdx.y
 
     if pos_x >= size or pos_y >= size:
-        return # if we are not in matrix, do nothing
+        return  # if we are not in matrix, do nothing
 
-    pos = pos_x * size + pos_y # position in storage
+    pos = pos_x * size + pos_y  # position in storage
     a_cache[pos_x, pos_y] = a[pos]
     b_cache[pos_x, pos_y] = b[pos]
-    cuda.syncthreads() #fill caches completely
+    cuda.syncthreads()  # fill caches completely
 
     # calculate one value of result matrix
     value = 0.0
@@ -379,7 +379,6 @@ def _mm_practice(out: Storage, a: Storage, b: Storage, size: int) -> None:
         value += a_cache[pos_x, i] * b_cache[i, pos_y]
     # write this value
     out[pos] = value
-
 
 
 jit_mm_practice = cuda.jit()(_mm_practice)
@@ -448,9 +447,9 @@ def _tensor_matrix_multiply(
     #    a) Copy into shared memory for a matrix.
     #    b) Copy into shared memory for b matrix
     #    c) Compute the dot produce for position c[i, j]
-    
+
     assert a_shape[-1] == b_shape[-2]
-    common_dim_size = a_shape[-1] # common dimension size for matmul
+    common_dim_size = a_shape[-1]  # common dimension size for matmul
 
     # result of matmul in c[i, j]
     value = 0.0
@@ -468,13 +467,13 @@ def _tensor_matrix_multiply(
         # fill caches
         a_shared[pi, pj] = a_storage[a_pos] if i < a_shape[-2] and a_common_ind < a_shape[-1] else 0.0
         b_shared[pi, pj] = b_storage[b_pos] if j < b_shape[-1] and b_common_ind < b_shape[-2] else 0.0
-        cuda.syncthreads() #fill caches completely
+        cuda.syncthreads()  # fill caches completely
 
         # calculate one value of result matrix
         for ind in range(BLOCK_DIM):
             value += a_shared[pi, ind] * b_shared[ind, pj]
-        cuda.syncthreads() # calculate value completele
-    
+        cuda.syncthreads()  # calculate value completele
+
     # write value to out storage
     if i < out_shape[-2] and j < out_shape[-1]:
         pos = batch * out_strides[-3] +  i * out_strides[-2] + j * out_strides[-1]
