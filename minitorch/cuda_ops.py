@@ -476,7 +476,7 @@ def _tensor_matrix_multiply(
 
     # write value to out storage
     if i < out_shape[-2] and j < out_shape[-1]:
-        pos = batch * out_strides[-3] +  i * out_strides[-2] + j * out_strides[-1]
+        pos = batch * out_strides[-3] + i * out_strides[-2] + j * out_strides[-1]
         out[pos] = value
 
 
