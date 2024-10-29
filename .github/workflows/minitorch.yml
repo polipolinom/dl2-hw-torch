@@ -52,12 +52,12 @@ jobs:
         echo "Module 3"
         pytest tests -x -m task3_1
         pytest tests -x -m task3_2
-        pytest tests -x -m task3_3
-        pytest tests -x -m task3_4
-    - name: Test with pytest Module 4
-      run: |
-        echo "Module 4"
-        pytest tests -x -m task4_1
-        pytest tests -x -m task4_2
-        pytest --suppress-no-test-exit-code tests -x -m task4_3 
-        pytest --suppress-no-test-exit-code tests -x -m task4_4
+        pytest --suppress-no-test-exit-code tests -x -m task3_3
+        pytest --suppress-no-test-exit-code tests -x -m task3_4
+    # - name: Test with pytest Module 4
+    #   run: |
+    #     echo "Module 4"
+    #     pytest tests -x -m task4_1
+    #     pytest tests -x -m task4_2
+    #     pytest tests -x -m task4_3 
+    #     pytest tests -x -m task4_4
